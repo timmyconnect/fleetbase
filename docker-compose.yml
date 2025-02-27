@@ -59,8 +59,8 @@ services:
       args:
         ENVIRONMENT: ${ENVIRONMENT}
         API_HOST: ${API_HOST}
-        SOCKETCLUSTER_HOST: ${SOCKETCLUSTER_HOST}
-        SOCKETCLUSTER_PORT: ${SOCKETCLUSTER_PORT}
+        SOCKETCLUSTER_HOST: tcp://socket
+        SOCKETCLUSTER_PORT: 38000
     ports:
       - "4200:4200"
     volumes:
