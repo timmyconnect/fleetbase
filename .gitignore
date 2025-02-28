@@ -3,7 +3,6 @@
 .env.backup
 .phpunit.result.cache
 .pnpm-store
-docker-compose.override.yml
 npm-debug.log
 yarn-error.log
 api/public/hot

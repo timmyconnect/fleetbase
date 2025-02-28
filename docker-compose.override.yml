@@ -15,7 +15,7 @@ services:
       - "./docker/database/:/docker-entrypoint-initdb.d/"
       - "./docker/database/mysql:/var/lib/mysql"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
       MYSQL_DATABASE: "fleetbase"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -56,7 +56,7 @@ services:
       context: .
       dockerfile: console/Dockerfile.server-build
       args:
-        ENVIRONMENT: development
+        ENVIRONMENT: ${ENVIRONMENT}
     ports:
       - "4200:4200"
     volumes:
@@ -68,13 +68,18 @@ services:
       dockerfile: docker/Dockerfile
       target: app-dev
       args:
-        ENVIRONMENT: development
+        ENVIRONMENT: ${ENVIRONMENT}
         GITHUB_AUTH_KEY: ${GITHUB_AUTH_KEY}
     volumes:
       - console-build:/fleetbase/console
     environment:
-      ENVIRONMENT: development
+      ENVIRONMENT: ${ENVIRONMENT}
+      CONSOLE_HOST: ${CONSOLE_HOST}
+      APP_URL: ${APP_URL}
       DATABASE_URL: "mysql://root@database/fleetbase"
+      IPINFO_API_KEY: ${IPINFO_API_KEY}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      GOOGLE_MAPS_LOCALE: ${GOOGLE_MAPS_LOCALE}
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
       CACHE_PATH: /fleetbase/api/storage/framework/cache
