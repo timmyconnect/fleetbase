@@ -57,14 +57,6 @@ services:
       dockerfile: console/Dockerfile.server-build
       args:
         ENVIRONMENT: ${ENVIRONMENT}
-        API_HOST: ${API_HOST}
-        API_NAMESPACE: int/v1
-        API_SECURE: true
-        SOCKETCLUSTER_PATH: /socketcluster/
-        SOCKETCLUSTER_HOST: ${SOCKETCLUSTER_HOST}
-        SOCKETCLUSTER_SECURE: true
-        SOCKETCLUSTER_PORT: 38000
-        OSRM_HOST: https://router.project-osrm.org
     ports:
       - "4200:4200"
     volumes:
@@ -81,8 +73,8 @@ services:
     volumes:
       - console-build:/fleetbase/console
     environment:
-      APP_URL: ${APP_URL}
-      CONSOLE_HOST: ${CONSOLE_HOST}
+      APP_URL: ${FQDN_URL}:8000
+      CONSOLE_HOST: ${FQDN_URL}:4200
       ENVIRONMENT: ${ENVIRONMENT}
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
