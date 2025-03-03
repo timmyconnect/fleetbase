@@ -75,6 +75,7 @@ services:
     environment:
       ENVIRONMENT: ${ENVIROMENT}
       APP_URL: ${APP_URL}
+      CONSOLE_HOST: ${CONSOLE_HOST}
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
