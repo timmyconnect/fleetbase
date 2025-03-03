@@ -37,7 +37,7 @@ services:
       dockerfile: docker/Dockerfile
       target: events-dev
       args:
-        ENVIRONMENT: ${ENVIRONMENT}
+        ENVIRONMENT: ${ENVIROMENT}
     healthcheck:
       test: ["CMD", "php", "artisan", "queue:status"]
       interval: 30s
@@ -56,7 +56,7 @@ services:
       context: .
       dockerfile: console/Dockerfile.server-build
       args:
-        ENVIRONMENT: ${ENVIRONMENT}
+        ENVIRONMENT: development
     ports:
       - "4200:4200"
     volumes:
@@ -68,14 +68,13 @@ services:
       dockerfile: docker/Dockerfile
       target: app-dev
       args:
-        ENVIRONMENT: ${ENVIRONMENT}
+        ENVIRONMENT: ${ENVIROMENT}
         GITHUB_AUTH_KEY: ${GITHUB_AUTH_KEY}
     volumes:
       - console-build:/fleetbase/console
     environment:
-      APP_URL: ${FQDN_URL}:8000
-      CONSOLE_HOST: ${FQDN_URL}:4200
-      ENVIRONMENT: ${ENVIRONMENT}
+      ENVIRONMENT: ${ENVIROMENT}
+      APP_URL: ${APP_URL}
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
