@@ -61,8 +61,8 @@ services:
       API_HOST: ${API_URL}
       SOCKETCLUSTER_HOST: ${SOCKET_URL}
       API_NAMESPACE: int/v1
-      API_SECURE: ${API_SECURE:-true}
-      SOCKETCLUSTER_SECURE: ${SOCKETCLUSTER_SECURE:-true}
+      API_SECURE: ${API_SECURE}
+      SOCKETCLUSTER_SECURE: ${SOCKETCLUSTER_SECURE}
     ports:
       - "4200:4200"
     volumes:
