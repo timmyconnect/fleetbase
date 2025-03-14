@@ -56,7 +56,13 @@ services:
       context: .
       dockerfile: console/Dockerfile.server-build
       args:
-        ENVIRONMENT: development
+        ENVIRONMENT: ${ENVIROMENT}
+    enviroment:
+      API_HOST: ${API_URL}
+      SOCKETCLUSTER_HOST: ${SOCKET_URL}
+      API_NAMESPACE: int/v1
+      API_SECURE: ${API_SECURE:-true}
+      SOCKETCLUSTER_SECURE: ${SOCKETCLUSTER_SECURE:-true}
     ports:
       - "4200:4200"
     volumes:
@@ -75,7 +81,7 @@ services:
     environment:
       ENVIRONMENT: ${ENVIROMENT}
       APP_URL: ${APP_URL}
-      API_HOST: ${APP_URL}
+      API_HOST: ${API_URL}
       CONSOLE_HOST: ${CONSOLE_HOST}
       SOCKETCLUSTER_HOST: ${SOCKET_URL}
       DATABASE_URL: "mysql://root@database/fleetbase"
