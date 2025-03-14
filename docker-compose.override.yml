@@ -57,7 +57,7 @@ services:
       dockerfile: console/Dockerfile.server-build
       args:
         ENVIRONMENT: ${ENVIROMENT}
-    enviroment:
+    environment:
       API_HOST: ${API_HOST}
       SOCKETCLUSTER_HOST: ${SOCKETCLUSTER_URL}
       API_NAMESPACE: int/v1
