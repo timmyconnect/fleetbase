@@ -1,0 +1,30 @@
+version: “3.8”
+services:  
+  application:  
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      MAIL_MAILER: smtp
+      OSRM_HOST: https://router.project-osrm.org
+      IPINFO_API_KEY: ${IPINFO_API_KEY}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      GOOGLE_MAPS_LOCALE: us
+      TWILIO_SID:  
+      TWILIO_TOKEN:
+      TWILIO_FROM:
+      CONSOLE_HOST: ${SERVICE_FQDN_FLEETBASE_4200}
+      APP_URL: ${SERVICE_FQDN_FLEETBASE_8000}
+      DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
+      CACHE_DRIVER: redis
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
+      SESSION_DOMAIN: localhost
+      BROADCAST_DRIVER: socketcluster
+      MAIL_FROM_NAME: Fleetbase
+      APP_NAME: Fleetbase
+      LOG_CHANNEL: daily
+      REGISTRY_HOST: https://registry.fleetbase.io
+      REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
+      OSRM_HOST: https://router.project-osrm.org
+      
