@@ -68,7 +68,9 @@ services:
   application:
     image: fleetbase/fleetbase-api:latest
     environment:
-      ENVIRONMENT: development
+      ENVIRONMENT: ${ENVIRONMENT}
+      MAIL_MAILER: smtp
+      MAIL_FROM_NAME: Fleetbase
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
@@ -82,6 +84,14 @@ services:
       LOG_CHANNEL: daily
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
+      CONSOLE_HOST: ${SERVICE_FQDN_FLEETBASE_4200}
+      APP_URL: ${SERVICE_FQDN_FLEETBASE_8005}
+      IPINFO_API_KEY: ${IPINFO_API_KEY}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      GOOGLE_MAPS_LOCALE: us
+      TWILIO_SID:  
+      TWILIO_TOKEN:
+      TWILIO_FROM:
       OSRM_HOST: https://router.project-osrm.org
     depends_on:
       - database
