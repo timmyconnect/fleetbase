@@ -1,18 +1,76 @@
-version: “3.8”
-services:  
-  application:  
+services:
+  cache:
+    image: redis:4-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  database:
+    image: mysql:8.0-oracle
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./docker/database/:/docker-entrypoint-initdb.d/"
+      - "./docker/database/mysql:/var/lib/mysql"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "fleetbase"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  socket:
+    image: socketcluster/socketcluster:v17.4.0
+    ports:
+      - "38000:8000"
+    environment:
+      SOCKETCLUSTER_WORKERS: 10
+      SOCKETCLUSTER_BROKERS: 10
+
+  scheduler:
+    image: fleetbase/fleetbase-api:latest
+    command: ["go-crond", "--verbose", "root:./crontab"]
+    environment:
+      DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
+      CACHE_DRIVER: redis
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
+
+  queue:
+    image: fleetbase/fleetbase-api:latest
+    command: ["php", "artisan", "queue:work"]
+    healthcheck:
+      test: ["CMD", "php", "artisan", "queue:status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      DATABASE_URL: "mysql://root@database/fleetbase"
+      QUEUE_CONNECTION: redis
+      CACHE_DRIVER: redis
+      CACHE_PATH: /fleetbase/api/storage/framework/cache
+      CACHE_URL: tcp://cache
+      REDIS_URL: tcp://cache
+
+  console:
+    image: fleetbase/fleetbase-console:latest
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
+
+  application:
+    image: fleetbase/fleetbase-api:latest
     environment:
       ENVIRONMENT: ${ENVIRONMENT}
       MAIL_MAILER: smtp
-      OSRM_HOST: https://router.project-osrm.org
-      IPINFO_API_KEY: ${IPINFO_API_KEY}
-      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
-      GOOGLE_MAPS_LOCALE: us
-      TWILIO_SID:  
-      TWILIO_TOKEN:
-      TWILIO_FROM:
-      CONSOLE_HOST: ${SERVICE_FQDN_FLEETBASE_4200}
-      APP_URL: ${SERVICE_FQDN_FLEETBASE_8000}
+      MAIL_FROM_NAME: Fleetbase
       DATABASE_URL: "mysql://root@database/fleetbase"
       QUEUE_CONNECTION: redis
       CACHE_DRIVER: redis
@@ -26,5 +84,25 @@ services:
       LOG_CHANNEL: daily
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
+      CONSOLE_HOST: ${SERVICE_FQDN_FLEETBASE_4200}
+      APP_URL: ${SERVICE_FQDN_FLEETBASE_8000}
+      IPINFO_API_KEY: ${IPINFO_API_KEY}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      GOOGLE_MAPS_LOCALE: us
+      TWILIO_SID:  
+      TWILIO_TOKEN:
+      TWILIO_FROM:
       OSRM_HOST: https://router.project-osrm.org
-      
+    depends_on:
+      - database
+      - cache
+      - queue
+
+  httpd:
+    build:
+      context: .
+      dockerfile: docker/httpd/Dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - application
