@@ -68,6 +68,8 @@ services:
   application:
     image: fleetbase/fleetbase-api:latest
     environment:
+      SERVICE_FQDN_FLEETBASE_4200:
+      SERVICE_FQDN_FLEETBASE_8005:
       ENVIRONMENT: ${ENVIRONMENT}
       MAIL_MAILER: smtp
       MAIL_FROM_NAME: Fleetbase
@@ -84,8 +86,8 @@ services:
       LOG_CHANNEL: daily
       REGISTRY_HOST: https://registry.fleetbase.io
       REGISTRY_PREINSTALLED_EXTENSIONS: 'true'
-      CONSOLE_HOST: SERVICE_FQDN_FLEETBASE_4200
-      APP_URL: SERVICE_FQDN_FLEETBASE_8005
+      CONSOLE_HOST: ${SERVICE_FQDN_FLEETBASE_4200}
+      APP_URL: ${SERVICE_FQDN_FLEETBASE_8005}
       IPINFO_API_KEY: ${IPINFO_API_KEY}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       GOOGLE_MAPS_LOCALE: us
