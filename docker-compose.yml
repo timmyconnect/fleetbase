@@ -67,6 +67,8 @@ services:
 
   application:
     image: fleetbase/fleetbase-api:latest
+    volumes:
+      - ./api/.env:/fleetbase/api/.env
     environment:
       SERVICE_FQDN_FLEETBASE_4200:
       SERVICE_FQDN_FLEETBASE_8005:
